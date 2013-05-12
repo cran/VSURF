@@ -31,7 +31,6 @@
 #' summary(toys.vsurf)}
 #' 
 #' @method summary VSURF
-#' @S3method summary VSURF
 #' @export summary.VSURF
 summary.VSURF <- function(object, ...) {
   

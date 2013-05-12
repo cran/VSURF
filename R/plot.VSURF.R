@@ -75,7 +75,6 @@
 #' 
 #' @rdname plot.VSURF
 #' @method plot VSURF
-#' @S3method plot VSURF
 #' @export plot.VSURF
 plot.VSURF <- function(x, nvar.imp=NULL, nvar.sd=NULL, var.names=FALSE, ...) {
 
@@ -141,7 +140,6 @@ plot.VSURF <- function(x, nvar.imp=NULL, nvar.sd=NULL, var.names=FALSE, ...) {
 
 #' @rdname plot.VSURF
 #' @method plot VSURF.thres
-#' @S3method plot VSURF.thres
 #' @export plot.VSURF.thres
 plot.VSURF.thres <- function(x, nvar.imp=NULL, nvar.sd=NULL, imp=TRUE, imp.sd=TRUE,
                              var.names=FALSE, ...) {
@@ -197,7 +195,6 @@ plot.VSURF.thres <- function(x, nvar.imp=NULL, nvar.sd=NULL, imp=TRUE, imp.sd=TR
 
 #' @rdname plot.VSURF
 #' @method plot VSURF.interp
-#' @S3method plot VSURF.interp
 #' @export plot.VSURF.interp
 plot.VSURF.interp <- function(x, var.names=FALSE, ...) {
 
@@ -231,7 +228,6 @@ plot.VSURF.interp <- function(x, var.names=FALSE, ...) {
 
 #' @rdname plot.VSURF
 #' @method plot VSURF.pred
-#' @S3method plot VSURF.pred
 #' @export plot.VSURF.pred
 plot.VSURF.pred <- function(x, var.names=FALSE, ...) {
 

@@ -54,7 +54,6 @@
 #' 
 #' @rdname tune
 #' @method tune VSURF.thres
-#' @S3method tune VSURF.thres
 #' @export tune.VSURF.thres
 tune.VSURF.thres <- function (x, nmin = 1, ...) {
   
@@ -87,7 +86,6 @@ tune.VSURF.thres <- function (x, nmin = 1, ...) {
 
 #' @rdname tune
 #' @method tune VSURF.interp
-#' @S3method tune VSURF.interp
 #' @export tune.VSURF.interp
 tune.VSURF.interp <- function (x, nsd = 1, ...) {
   

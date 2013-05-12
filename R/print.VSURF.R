@@ -22,7 +22,6 @@
 ##' }
 ##'
 ##' @method print VSURF
-##' @S3method print VSURF
 ##' @export print.VSURF
 print.VSURF <- function(x, ...) {
     

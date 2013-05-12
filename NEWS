@@ -2,6 +2,13 @@ News about the R package VSURF:
 --------------------------------
 
 
+Main changes in Version 0.8.2 (2014-05-12):
+* Bug fix: the random seed is now correctly set when using
+the VSURF.parallel function with clusterType="FORK"
+* Bug fix: VSURF function can now handle categorical input
+variables. Thanks to ONF researchers for pointing this out.
+
+
 Main changes in Version 0.8.1 (2014-01-28):
 * Bug fix: error of the model was wrongly updated in
 the VSURF.pred function. Thanks a lot to Dustin Fife.

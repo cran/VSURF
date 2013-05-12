@@ -172,7 +172,6 @@
 #' 
 #' @rdname VSURF
 #' @method VSURF default
-#' @S3method VSURF default
 #' @export VSURF.default
 VSURF.default <- function(
     x, y, ntree=2000, mtry=max(floor(ncol(x)/3), 1),
@@ -224,7 +223,6 @@ VSURF.default <- function(
 
 #' @rdname VSURF
 #' @method VSURF formula
-#' @S3method VSURF formula
 #' @export VSURF.formula
 VSURF.formula <- function(formula, data, ..., na.action = na.fail) {
     ### formula interface for VSURF.
@@ -272,7 +270,6 @@ you may reorder these to get indices of the original data")
 
 #' @rdname VSURF
 #' @method VSURF.parallel default
-#' @S3method VSURF.parallel default
 #' @export VSURF.parallel.default
 VSURF.parallel.default <- function(
     x, y, ntree=2000, mtry=max(floor(ncol(x)/3), 1),
@@ -329,7 +326,6 @@ VSURF.parallel.default <- function(
 
 #' @rdname VSURF
 #' @method VSURF.parallel formula
-#' @S3method VSURF.parallel formula
 #' @export VSURF.parallel.formula
 VSURF.parallel.formula <- function(formula, data, ..., na.action = na.fail) {
     ### formula interface for VSURF.parallel.

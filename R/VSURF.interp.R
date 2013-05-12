@@ -120,7 +120,7 @@ VSURF.interp.default <- function(x, y, vars, nfor.interp=25, nsd=1, ...) {
   for (i in 1:nvars){
     rf <- rep(NA, nfor.interp)
     u <- vars[1:i]
-    w <- as.matrix(x[,u])
+    w <- x[,u, drop=FALSE]
     if (type=="classif") {
       if (i <= n) {
         for (j in 1:nfor.interp) {
@@ -221,7 +221,6 @@ VSURF.interp.formula <- function(formula, data, ..., na.action = na.fail) {
 
 #' @rdname VSURF.interp
 #' @method VSURF.interp.parallel default
-#' @S3method VSURF.interp.parallel default
 #' @export VSURF.interp.parallel.default
 VSURF.interp.parallel.default <- function(
     x, y, vars, nfor.interp=25, nsd=1,
@@ -251,7 +250,7 @@ VSURF.interp.parallel.default <- function(
   rf.interp.classif <- function(i, ...) {
     rf <- rep(NA, nfor.interp)
     u <- vars[1:i]
-    w <- as.matrix(x[,u])
+    w <- x[,u, drop=FALSE]
     
     if (i <= n) {
       for (j in 1:nfor.interp) {
@@ -270,7 +269,7 @@ VSURF.interp.parallel.default <- function(
   rf.interp.reg <- function(i, ...) {
     rf <- rep(NA, nfor.interp)
     u <- vars[1:i]
-    w <- as.matrix(x[,u])
+    w <- x[,u, drop=FALSE]
     
     if (i <= n) {
       for (j in 1:nfor.interp) {
@@ -288,27 +287,46 @@ VSURF.interp.parallel.default <- function(
   
   ncores <- min(nvars, ncores)
   
-  clust <- makeCluster(spec=ncores, type=clusterType)
-  registerDoParallel(clust)
-  
-  i <- NULL #to avoid check NOTE...
-  
-  if (type=="classif") {
-    res <- foreach(i=1:nvars, .packages="randomForest", .combine="rbind") %dopar% {
-      out <- rf.interp.classif(i=i, ...)
+  if (clusterType=="FORK") {
+    if (type=="classif") {
+      res <- mclapply(X=1:nvars, FUN=rf.interp.classif, ..., mc.cores=ncores,
+                      mc.preschedule=FALSE)
+    }
+    if (type=="reg") {
+      res <- mclapply(X=1:nvars, FUN=rf.interp.reg, ..., mc.cores=ncores,
+                      mc.preschedule=FALSE)
+    }
+    
+    for (i in 1:nvars) {
+      err.interp[i] <- res[[i]][1]
+      sd.interp[i] <- res[[i]][2]
     }
   }
   
-  if (type=="reg") {
-    res <- foreach(i=1:nvars, .packages="randomForest", .combine="rbind") %dopar% {
-      out <- rf.interp.reg(i=i, ...)
+else {
+    
+    clust <- makeCluster(spec=ncores, type=clusterType)
+    registerDoParallel(clust)
+    
+ #   i <- NULL #to avoid check NOTE...
+    
+    if (type=="classif") {
+      res <- foreach(i=1:nvars, .packages="randomForest", .combine="rbind") %dopar% {
+        out <- rf.interp.classif(i, ...)
+      }
     }
+    
+    if (type=="reg") {
+      res <- foreach(i=1:nvars, .packages="randomForest", .combine="rbind") %dopar% {
+        out <- rf.interp.reg(i, ...)
+      }
+    }
+    
+    stopCluster(clust)
+    
+    err.interp <- res[,1]
+    sd.interp <- res[,2]
   }
-  
-  stopCluster(clust)
-  
-  err.interp <- res[,1]
-  sd.interp <- res[,2]
   
   var.min <- which.min(err.interp)
   sd.min <- sd.interp[var.min]
@@ -337,7 +355,6 @@ VSURF.interp.parallel.default <- function(
 
 #' @rdname VSURF.interp
 #' @method VSURF.interp.parallel formula
-#' @S3method VSURF.interp.parallel formula
 #' @export VSURF.interp.parallel.formula
 VSURF.interp.parallel.formula <- function(formula, data, ..., na.action = na.fail) {
 ### formula interface for VSURF.interp.parallel.

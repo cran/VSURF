@@ -82,7 +82,6 @@
 #'
 #' @rdname VSURF.pred
 #' @method VSURF.pred default
-#' @S3method VSURF.pred default
 #' @export VSURF.pred.default
 VSURF.pred.default <-function(x, y, err.interp, varselect.interp, nfor.pred=25, nmj=1, ...){
   
@@ -126,7 +125,7 @@ did not eliminate variables")
     # and test of the addition of the variable
     varselect.pred <- varselect.interp[1]
     u <- varselect.pred
-    w <- as.matrix(x[,u])
+    w <- x[,u, drop=FALSE]
     rf <- rep(NA, nfor.pred)
     if (type=="classif") {
       for (j in 1:nfor.pred) {
@@ -145,7 +144,7 @@ did not eliminate variables")
     if (l>1) { 
       for (i in 2:l){
         u <- c(varselect.pred, varselect.interp[i])
-        w <- as.matrix(x[,u])
+        w <- x[,u, drop=FALSE]
         rf <- rep(NA, nfor.pred)
         if (type=="classif") {
             for (j in 1:nfor.pred) {
@@ -186,7 +185,6 @@ did not eliminate variables")
 
 #' @rdname VSURF.pred
 #' @method VSURF.pred formula
-#' @S3method VSURF.pred formula 
 #' @export VSURF.pred.formula
 VSURF.pred.formula <- function(formula, data, ..., na.action = na.fail) {
 ### formula interface for VSURF.pred.

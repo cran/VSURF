@@ -103,7 +103,6 @@
 #'
 #' @rdname VSURF.thres
 #' @method VSURF.thres default
-#' @S3method VSURF.thres default
 #' @export VSURF.thres.default
 VSURF.thres.default <- function(x, y, ntree=2000, mtry=max(floor(ncol(x)/3), 1),
                         nfor.thres=50, nmin=1, ...) {
@@ -226,7 +225,6 @@ VSURF.thres.default <- function(x, y, ntree=2000, mtry=max(floor(ncol(x)/3), 1),
 
 #' @rdname VSURF.thres
 #' @method VSURF.thres formula
-#' @S3method VSURF.thres formula
 #' @export VSURF.thres.formula
 VSURF.thres.formula <- function(formula, data, ..., na.action = na.fail) {
 ### formula interface for VSURF.thres.
@@ -274,7 +272,6 @@ VSURF.thres.formula <- function(formula, data, ..., na.action = na.fail) {
 
 #' @rdname VSURF.thres
 #' @method VSURF.thres.parallel default
-#' @S3method VSURF.thres.parallel default
 #' @export VSURF.thres.parallel.default
 VSURF.thres.parallel.default <- function(x, y, ntree=2000, mtry=max(floor(ncol(x)/3), 1),
                                 nfor.thres=50, nmin=1, clusterType="PSOCK",
@@ -324,22 +321,33 @@ VSURF.thres.parallel.default <- function(x, y, ntree=2000, mtry=max(floor(ncol(x
       out <- list(m=m, perf=perf)
   }
   
-  clust <- makeCluster(spec=ncores, type=clusterType)
-  registerDoParallel(clust)
-  
-  if (type=="classif") {
-      res <- foreach(i=1:nfor.thres, .packages="randomForest") %dopar% {
-          out <- rf.classif(i, ...)
-      }
+  if (clusterType=="FORK") {
+    if (type=="classif") {
+      res <- mclapply(X=1:nfor.thres, FUN=rf.classif, ..., mc.cores=ncores)
+    }
+    if (type=="reg") {
+      res <- mclapply(X=1:nfor.thres, FUN=rf.reg, ..., mc.cores=ncores)
+    }
   }
   
-  if (type=="reg") {
+  else {
+    clust <- makeCluster(spec=ncores, type=clusterType)
+    registerDoParallel(clust)
+    
+    if (type=="classif") {
       res <- foreach(i=1:nfor.thres, .packages="randomForest") %dopar% {
-          out <- rf.reg(i, ...)
+        out <- rf.classif(i, ...)
       }
+    }
+    
+    if (type=="reg") {
+      res <- foreach(i=1:nfor.thres, .packages="randomForest") %dopar% {
+        out <- rf.reg(i, ...)
+      }
+    }
+    stopCluster(clust)
   }
-  stopCluster(clust)
-      
+  
   for (i in 1:nfor.thres) {
       m[i,] <- res[[i]]$m
       perf[i] <- res[[i]]$perf
@@ -421,7 +429,6 @@ VSURF.thres.parallel.default <- function(x, y, ntree=2000, mtry=max(floor(ncol(x
 
 #' @rdname VSURF.thres
 #' @method VSURF.thres.parallel formula
-#' @S3method VSURF.thres.parallel formula
 #' @export VSURF.thres.parallel.formula
 VSURF.thres.parallel.formula <- function(formula, data, ..., na.action = na.fail) {
 ### formula interface for VSURF.thres.parallel.

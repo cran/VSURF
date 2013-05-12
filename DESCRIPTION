@@ -1,8 +1,8 @@
 Package: VSURF
 Type: Package
 Title: Variable Selection Using Random Forests
-Version: 0.8.1
-Date: 2013-11-25
+Version: 0.8.2
+Date: 2013-05-12
 Author: Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot
 Maintainer: Robin Genuer <Robin.Genuer@isped.u-bordeaux2.fr>
 Description: Three steps variable selection procedure based on random forests.
@@ -16,10 +16,7 @@ Description: Three steps variable selection procedure based on random forests.
     selected by the second step, for prediction purpose.
 License: GPL (>= 2)
 Depends: randomForest, rpart, doParallel
-Collate: 'VSURF.R' 'VSURF.interp.R' 'VSURF.pred.R' 'VSURF.thres.R'
-        'plot.VSURF.R' 'summary.VSURF.R' 'toys.R' 'tune.R'
-        'print.VSURF.R'
-Packaged: 2014-01-28 15:48:33 UTC; robin
+Packaged: 2014-05-12 13:57:52 UTC; robin
 NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2014-02-05 10:14:29
+Date/Publication: 2014-05-12 16:19:26
