@@ -1,0 +1,4 @@
+export(VSURF, VSURF.interp, VSURF.pred, VSURF.thres)
+
+importFrom(randomForest , randomForest)
+import(rpart)
