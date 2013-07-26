@@ -1,8 +1,9 @@
-VSURF.thres <- function(x, y, ntree=500, nfor.thres=50, nmin=1,
+VSURF.thres <- function(x, y, ntree=500, 
                         mtry=if (!is.factor(y)) max(floor(ncol(x)/3), 1)
-                        else floor(sqrt(ncol(x))) ) {
+                        else floor(sqrt(ncol(x))),
+                        nfor.thres=50, nmin=1) {
 
-  # x:  input
+  # x: input
   # y: output
   # ntree: number of forest trees
   # mtry: number of variables chosen at each node of a tree
@@ -88,7 +89,7 @@ VSURF.thres <- function(x, y, ntree=500, nfor.thres=50, nmin=1,
       s <- p
     }
     else {
-      s <- min(w)
+      s <- min(w)-1
     }
   }
   
@@ -99,8 +100,10 @@ VSURF.thres <- function(x, y, ntree=500, nfor.thres=50, nmin=1,
 
   output <- list('varselect.thres'=varselect.thres,
                  'imp.varselect.thres'=imp.varselect.thres,
-                 'num.varselect'=s,
+                 'min.thres'=min.pred,
+                 'num.varselect.thres'=s,
                  'ord.imp'=ord.imp,
                  'ord.sd'=ord.sd,
-                 'mean.perf'=mean.perf)
+                 'mean.perf'=mean.perf,
+                 'pred.pruned.tree'=pred.pruned.tree)
 }

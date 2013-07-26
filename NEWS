@@ -1,0 +1,9 @@
+News about the R package VSURF:
+--------------------------------
+
+
+Main changes in Version 0.6 (2013-07-23):
+* New functions: plot.VSURF, summary.VSURF, VSURF.interp.tune, VSURF.thres.tune.
+* Addition of a dataset: toys
+* Addition of new outputs of existing functions.
+* Bug fix: min.thres component of VSURF results list returns now the threshold value.

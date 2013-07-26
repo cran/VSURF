@@ -51,5 +51,7 @@ VSURF.interp <- function(x, y, vars, nfor.interp=25, nsd=1){
   
   output <- list('varselect.interp'=varselect,
                  'err.interp'=err.interp,
-                 'sd.min'=sd.min)
+                 'sd.min'=sd.min,
+                 'num.varselect.interp'=nvarselect,
+                 'varselect.thres' = vars)
 }

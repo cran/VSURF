@@ -1,49 +1,41 @@
-\name{VSURF.interp}
+\name{VSURF.interp.tune}
 
-\alias{VSURF.interp}
+\alias{VSURF.interp.tune}
 %- Also NEED an '\alias' for EACH other topic documented here.
 
 \title{
-Interpretation step of VSURF
+Tuning of the interpretation step of VSURF
 }
 
 \description{
-Interpretation step aims to select all variables related to the response for interpretation prupose. This is the second step of the \code{\link{VSURF}} function. It is designed to be executed after the thresholding step \code{\link{VSURF.thres}}.
+This function allows to tune the "interpretation step" of VSURF, without
+rerunning all computations.
 }
 
 \usage{
-VSURF.interp(x, y, vars, nfor.interp = 25, nsd = 1)
+VSURF.interp.tune(res.interp, nsd = 1)
 }
 
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{
-A data frame or a matrix of predictors, the columns represent the variables.
-}
-  \item{y}{
-A response vector (must be a factor for classification problems and
-numeric for regression ones).
-}
-  \item{vars}{
-A vector of variable indices. Typically, indices of variables selected by thresholding step (see value \code{varselect.thres} of \code{\link{VSURF.thres}} function).
-}
-  \item{nfor.interp}{
-Number of forests grown.
-}
+  \item{res.interp}{
+    An object of class \code{VSURF.interp}, which is the result of the
+    \code{VSURF.interp} function.    
+  }
   \item{nsd}{
 Number of times the standard deviation of the minimum value of \code{err.interp} is multiplied. See details below.
 }
 }
 
 \details{
-  \code{nfor.interp} embedded random forests models are grown,
-  starting with the random forest build with only the most important
-  variable and ending with all variables.
-  Then, \code{err.min} the minimum mean out-of-bag (OOB) error rate
-  of these models and its associated standard deviation \code{sd.min}
-  are computed.
-  Finally, the smallest model (and hence its corresponding variables)
-  having a mean OOB error less than \code{err.min} + \code{nsd} * \code{sd.min} is selected.
+  In \code{\link{VSURF.interp}} function, the smallest model
+  (and hence its corresponding variables) having a mean OOB error rate
+  less than \code{err.min} + \code{nsd} * \code{sd.min} is selected.
+  The function \code{VSURF.interp.tune} allows to change the value of
+  \code{nsd} (which multiply the standard deviation of the minimum OOB
+  error rate \code{sd.min}), without rerunning all computations.
+  To get a larger model than default, choose a value of \code{nsd} less than 1,
+  and to get a smaller one, choose a value larger than 1.
 }
 
 \value{
@@ -79,23 +71,18 @@ Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{VSURF}}, \code{\link{VSURF.interp.tune}}
+\code{\link{VSURF}}, \code{\link{VSURF.interp}}
 }
 
 \examples{
+\dontrun{
 data(iris)
 iris.thres <- VSURF.thres(x=iris[,1:4], y=iris[,5], ntree=100, nfor.thres=20)
 iris.interp <- VSURF.interp(x=iris[,1:4], y=iris[,5], vars=iris.thres$varselect.thres,
                             nfor.interp=10)
 iris.interp
-
-\dontrun{
-# A more interesting example with toys data (see ?toys)
-# (less than 1 min to execute)
-data(toys)
-toys.thres <- VSURF.thres(x=toys$x, y=toys$y)
-toys.interp <- VSURF.interp(x=toys$x, y=toys$y, vars=toys.thres$varselect.thres)
-toys.interp}
+iris.interp.tuned <- VSURF.interp.tune(res.interp=iris.interp, nsd=10)
+iris.interp.tuned}
 }
 
 % Add one or more standard keywords, see file 'KEYWORDS' in the

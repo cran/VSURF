@@ -67,5 +67,6 @@ eliminate variables')
   
   output <- list('varselect.pred'=varselect.pred,
                  'err.pred'=err.pred,
-                 'mean.jump'=mean.jump)
+                 'mean.jump'=mean.jump,
+                 'num.varselect.pred'=length(varselect.pred) )
 }

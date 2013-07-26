@@ -4,19 +4,26 @@
 \title{
 Variable Selection Using Random Forests
 }
+
 \description{
-Three steps variable selection procedure based on random forests for supervised classification problems (for regression problems, see...)
-First step ("thresholding step") is dedicated to eliminate irrelevant variables from the dataset.
-Second step ("interpretation step") aims to select all variables related to the response for interpretation prupose.
-Third step ("prediction step") refines the selection by eliminating redundancy in the set of variables selected by the second step, for prediction prupose.
+Three steps variable selection procedure based on random forests for
+supervised classification and regression problems.
+First step ("thresholding step") is dedicated to eliminate irrelevant
+variables from the dataset.
+Second step ("interpretation step") aims to select all variables related
+to the response for interpretation prupose.
+Third step ("prediction step") refines the selection by eliminating
+redundancy in the set of variables selected by the second step,
+for prediction prupose.
 }
+
 \usage{
-VSURF(x, y, ntree=500, nfor.thres=50, nmin=1,
-      nfor.interp=25, nsd=1, nfor.pred=25, nmj=1,
+VSURF(x, y, ntree=500,
       mtry=if (!is.factor(y)) max(floor(ncol(x)/3), 1)
-           else floor(sqrt(ncol(x)))
-      )
+           else floor(sqrt(ncol(x))),
+      nfor.thres=50, nmin=1, nfor.interp=25, nsd=1, nfor.pred=25, nmj=1)
 }
+
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{x}{
@@ -51,13 +58,41 @@ Number of forests grown for "prediction step" (last of the three steps).
 Number of times the mean jump is multiplied.
 }
 }
+
 \details{
 \itemize{
-  \item First step ("thresholding step"): first, \code{nfor.thres} random forests are computed using the function \code{randomForest} with arguments \code{importance=TRUE}. Then variables are sorted according to their mean variable importance (VI), in decreasing order. This order is kept all along the procedure. Next, a threshold is computed: \code{min.thres}, the minimum predicted value of a pruned CART tree fitted to the curve of the standard deviations of VI. Finally, the actual "thresholding step" is performed: only variables with a mean VI larger than \code{nmin} * \code{min.thres} are kept.
-  \item Second step ("intepretation step"): the variables selected by the first step are considered. \code{nfor.interp} embedded random forests models are grown, starting with the random forest build with only the most important variable and ending with all variables selected in the first step. Then, \code{err.min} the minimum mean out-of-bag (OOB) error of these models and its associated standard deviation \code{sd.min} are computed. Finally, the smallest model (and hence its corresponding variables) having a mean OOB error less than \code{err.min} + \code{nsd} * \code{sd.min} is selected.
-  \item Third step ("prediction step"): The starting point is the same than in the second step. However, now the variables are added to the model in a stepwise manner. \code{mean.jump}, the mean jump value is calculated using variables that have been left out by the second step, and is set as the mean absolute difference between mean OOB errors of one model and its first following model. Hence a variable is included in the model if the mean OOB error decrease is larger than \code{nmj} * \code{mean.jump}.
+  \item First step ("thresholding step"): first, \code{nfor.thres}
+  random forests are computed using the function \code{randomForest}
+  with arguments \code{importance=TRUE}. Then variables are sorted
+  according to their mean variable importance (VI), in decreasing order.
+  This order is kept all along the procedure. Next, a threshold is
+  computed: \code{min.thres}, the minimum predicted value of a pruned
+  CART tree fitted to the curve of the standard deviations of VI.
+  Finally, the actual "thresholding step" is performed: only variables
+  with a mean VI larger than \code{nmin} * \code{min.thres} are kept.
+  
+  \item Second step ("intepretation step"): the variables selected by
+  the first step are considered. \code{nfor.interp} embedded random
+  forests models are grown, starting with the random forest build with
+  only the most important variable and ending with all variables
+  selected in the first step. Then, \code{err.min}
+  the minimum mean out-of-bag (OOB) error of these models and
+  its associated standard deviation \code{sd.min} are computed.
+  Finally, the smallest model (and hence its corresponding variables)
+  having a mean OOB error less than
+  \code{err.min} + \code{nsd} * \code{sd.min} is selected.
+
+  \item Third step ("prediction step"): the starting point is the same
+  than in the second step. However, now the variables are added to the
+  model in a stepwise manner. \code{mean.jump}, the mean jump value
+  is calculated using variables that have been left out by the second
+  step, and is set as the mean absolute difference between mean OOB
+  errors of one model and its first following model.
+  Hence a variable is included in the model if the mean OOB error
+  decrease is larger than \code{nmj} * \code{mean.jump}.
 }
 }
+
 \value{
 An object of class \code{VSURF}, which is a list with the following components:
  \item{varselect.thres}{
@@ -69,6 +104,9 @@ An object of class \code{VSURF}, which is a list with the following components:
  \item{min.thres}{
  The minimum predicted value of a pruned CART tree fitted to the curve of the standard deviations of VI.
  }
+ \item{num.varselect.thres}{
+   Number of variables selected by "thresholding step".
+ }
  \item{ord.imp}{
  A list containing the order of all variables mean importance. \code{$x} contains the mean importances sorted in decreasing order. \code{$ix} contains indexes of the variables.
  }
@@ -76,7 +114,10 @@ An object of class \code{VSURF}, which is a list with the following components:
  A vector of standard deviations of all variables importance. The order is given by \code{ord.imp}. 
  }
  \item{mean.perf}{
- The mean OOB error rate, obtained by a random forests build on all variables.
+ Mean OOB error rate, obtained by a random forests build on all variables.
+ }
+ \item{pred.pruned.treee}{
+   Predictions of the CART tree fitted to the curve of the standard deviations of VI.
  }
  \item{varselect.interp}{
  A vector of indexes of variables selected after "interpretation step".
@@ -87,6 +128,9 @@ An object of class \code{VSURF}, which is a list with the following components:
  \item{sd.min}{
  The standard deviation of OOB error rates associated to the random forests model attaining the minimum mean OOB error rate during the "interpretation step".
  }
+ \item{num.varselect.interp}{
+   Number of variables selected by "interpretation step".
+ }
  \item{varselect.pred}{
  A vector of indexes of variables selected after "prediction step".
  }
@@ -96,10 +140,28 @@ An object of class \code{VSURF}, which is a list with the following components:
  \item{mean.jump}{
  The mean jump value computed during the "prediction step".
  }
+ \item{num.varselect.pred}{
+   Number of variables selected by "prediction step".
+ }
+ \item{nmin}{
+   Number of times the "minimum value" is multiplied to set threshold
+   value.
+ }
+ \item{nsd}{
+   Number of times the standard deviation of the minimum value of \code{err.interp} is multiplied.   
+ }
+ \item{nmj}{
+   Number of times the mean jump is multiplied.   
+ }
+ \item{comput.time}{
+   Overall computation time
+ }
 }
+
 \references{
 Genuer, R. and Poggi, J.M. and Tuleau-Malot, C. (2010), Variable selection using random forests, Pattern Recognition Letters 31(14), 2225-2236
 }
+
 \author{
 Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot
 }
@@ -109,14 +171,25 @@ Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot
 
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
-%\seealso{
-%% ~~objects to See Also as \code{\link{help}}, ~~~
-%}
+\seealso{
+\code{\link{plot.VSURF}}, \code{\link{summary.VSURF}}, \code{\link{VSURF.thres}},
+\code{\link{VSURF.interp}}, \code{\link{VSURF.pred}}
+}
+
 \examples{
 data(iris)
 iris.vsurf <- VSURF(x=iris[,1:4], y=iris[,5], ntree=100, nfor.thres=20,
                     nfor.interp=10, nfor.pred=10)
+iris.vsurf
+
+\dontrun{
+# A more interesting example with toys data (see ?toys)
+# (less than 1 min to execute)
+data(toys)
+toys.vsurf <- VSURF(x=toys$x, y=toys$y)
+toys.vsurf}
 }
+
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
 %\keyword{ ~kwd1 }
