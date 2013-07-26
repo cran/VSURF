@@ -1,10 +1,10 @@
-VSURF.thres.tune <- function (res.thres, nmin = 1) {
+tune.VSURF.thres <- function (x, nmin = 1, ...) {
   
-  ord.imp <- res.thres$ord.imp
-  ord.sd <- res.thres$ord.sd
-  min.pred <- res.thres$min.thres
-  mean.perf <- res.thres$mean.perf
-  pred.pruned.tree <- res.thres$pred.pruned.tree
+  ord.imp <- x$ord.imp
+  ord.sd <- x$ord.sd
+  min.pred <- x$min.thres
+  mean.perf <- x$mean.perf
+  pred.pruned.tree <- x$pred.pruned.tree
   
   w <- which(ord.imp$x < nmin * min.pred)
   if (length(w) == 0) {

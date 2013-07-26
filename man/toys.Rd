@@ -57,7 +57,7 @@ toys.rf
 
 \dontrun{
 # VSURF applied for toys data:
-# (less than 1 min to execute)
+# (a few minutes to execute)
 data(toys)
 toys.vsurf <- VSURF(x=toys$x, y=toys$y)
 toys.vsurf}

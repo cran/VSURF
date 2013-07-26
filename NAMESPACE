@@ -1,8 +1,22 @@
-export(VSURF, VSURF.interp, VSURF.interp.tune, VSURF.pred, VSURF.thres, VSURF.thres.tune,
-       plot.VSURF, summary.VSURF)
-
 importFrom(randomForest , randomForest)
 import(rpart)
 
 S3method(plot,VSURF)
+S3method(plot,VSURF.thres)
+S3method(plot,VSURF.interp)
+S3method(plot,VSURF.pred)
 S3method(summary,VSURF)
+
+S3method(VSURF, formula)
+S3method(VSURF, default)
+S3method(VSURF.thres, formula)
+S3method(VSURF.thres, default)
+S3method(VSURF.interp, formula)
+S3method(VSURF.interp, default)
+S3method(VSURF.pred, formula)
+S3method(VSURF.pred, default)
+
+S3method(tune, VSURF.thres)
+S3method(tune, VSURF.interp)
+
+exportPattern("^[[:alpha:]]+")

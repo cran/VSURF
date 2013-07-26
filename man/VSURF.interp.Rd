@@ -1,38 +1,51 @@
 \name{VSURF.interp}
 
 \alias{VSURF.interp}
+\alias{VSURF.interp.default}
+\alias{VSURF.interp.formula}
 %- Also NEED an '\alias' for EACH other topic documented here.
 
 \title{
-Interpretation step of VSURF
+  Interpretation step of VSURF
 }
 
 \description{
-Interpretation step aims to select all variables related to the response for interpretation prupose. This is the second step of the \code{\link{VSURF}} function. It is designed to be executed after the thresholding step \code{\link{VSURF.thres}}.
+  Interpretation step aims to select all variables related to the response for interpretation prupose. This is the second step of the \code{\link{VSURF}} function. It is designed to be executed after the thresholding step \code{\link{VSURF.thres}}.
 }
 
 \usage{
-VSURF.interp(x, y, vars, nfor.interp = 25, nsd = 1)
+\method{VSURF.interp}{formula}(formula, data, ..., na.action=na.fail)
+\method{VSURF.interp}{default}(x, y, vars, nfor.interp = 25, nsd = 1, ...)
 }
 
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{
-A data frame or a matrix of predictors, the columns represent the variables.
-}
+  \item{data}{a data frame containing the variables in the model.
+  }
+  \item{na.action}{A function to specify the action to be taken if NAs
+    are found.  (NOTE: If given, this argument must be named, and as
+    \code{randomForest} it is only used with the formula-type call.)}
+  \item{x, formula}{
+    A data frame or a matrix of predictors, the columns represent the
+    variables. Or a formula describing the model to be fitted.
+  }
   \item{y}{
-A response vector (must be a factor for classification problems and
-numeric for regression ones).
-}
+    A response vector (must be a factor for classification problems and
+    numeric for regression ones).
+  }
   \item{vars}{
-A vector of variable indices. Typically, indices of variables selected by thresholding step (see value \code{varselect.thres} of \code{\link{VSURF.thres}} function).
-}
+    A vector of variable indices. Typically, indices of variables selected by thresholding step (see value \code{varselect.thres} of \code{\link{VSURF.thres}} function).
+  }
   \item{nfor.interp}{
-Number of forests grown.
-}
+    Number of forests grown.
+  }
   \item{nsd}{
-Number of times the standard deviation of the minimum value of \code{err.interp} is multiplied. See details below.
-}
+    Number of times the standard deviation of the minimum value of \code{err.interp} is multiplied. See details below.
+  }
+  \item{...}{
+    others parameters to be passed on to the \code{randomForest}
+    function (see ?randomForest for further information)
+  }
 }
 
 \details{
@@ -47,30 +60,36 @@ Number of times the standard deviation of the minimum value of \code{err.interp}
 }
 
 \value{
-A list with the following components:
- \item{varselect.interp}{
- A vector of indices of selected variables.
- }
- \item{err.interp}{
- A vector of the mean OOB error rates of the embedded random forests models.
- }
- \item{sd.min}{
- The standard deviation of OOB error rates associated to the random forests model attaining the minimum mean OOB error rate.
- }
- \item{num.varselect.interp}{
-   The number of selected variables.
- }
- \item{varselect.thres}{
- A vector of indexes of variables selected after "thresholding step", sorted according to their mean VI, in decreasing order.
- }
+  An object of class \code{VSURF.interp}, which is a list with the following components:
+  \item{varselect.interp}{
+    A vector of indices of selected variables.
+  }
+  \item{err.interp}{
+    A vector of the mean OOB error rates of the embedded random forests models.
+  }
+  \item{sd.min}{
+    The standard deviation of OOB error rates associated to the random forests model attaining the minimum mean OOB error rate.
+  }
+  \item{num.varselect.interp}{
+    The number of selected variables.
+  }
+  \item{varselect.thres}{
+    A vector of indexes of variables selected after "thresholding step", sorted according to their mean VI, in decreasing order.
+  }
+    \item{comput.time}{
+    Computation time.
+  }
+  \item{call}{
+      The original call to \code{VSURF.interp}.
+  }
 }
 
 \references{
-Genuer, R. and Poggi, J.M. and Tuleau-Malot, C. (2010), \emph{Variable selection using random forests}, Pattern Recognition Letters 31(14), 2225-2236
+  Genuer, R. and Poggi, J.M. and Tuleau-Malot, C. (2010), \emph{Variable selection using random forests}, Pattern Recognition Letters 31(14), 2225-2236
 }
 
 \author{
-Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot
+  Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot
 }
 %\note{
 %%  ~~further notes~~
@@ -79,7 +98,7 @@ Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{VSURF}}, \code{\link{VSURF.interp.tune}}
+  \code{\link{VSURF}}, \code{\link{tune}}
 }
 
 \examples{
@@ -90,8 +109,8 @@ iris.interp <- VSURF.interp(x=iris[,1:4], y=iris[,5], vars=iris.thres$varselect.
 iris.interp
 
 \dontrun{
-# A more interesting example with toys data (see ?toys)
-# (less than 1 min to execute)
+# A more interesting example with toys data (see \code{\link{toys}})
+# (a few minutes to execute)
 data(toys)
 toys.thres <- VSURF.thres(x=toys$x, y=toys$y)
 toys.interp <- VSURF.interp(x=toys$x, y=toys$y, vars=toys.thres$varselect.thres)

@@ -18,13 +18,14 @@
     \code{\link{VSURF}} function.
   }
   \item{\dots}{
-    ...
+    Not used.
   }
 }
 
 \details{
   This function prints the total computation time of VSURF.
-  It also gives the number of selected variables at each step of VSURF.
+  It also gives the number of selected variables (and the computation
+  time) at each step of VSURF.
 }
 
 \references{
@@ -51,8 +52,8 @@ iris.vsurf <- VSURF(x=iris[,1:4], y=iris[,5], ntree=100, nfor.thres=20,
                     nfor.interp=10, nfor.pred=10)
 summary(iris.vsurf)
 
-# A more interesting example with toys data (see ?toys)
-# (less than 1 min to execute)
+# A more interesting example with toys data (see \code{\link{toys}})
+# (a few minutes to execute)
 data(toys)
 toys.vsurf <- VSURF(x=toys$x, y=toys$y)
 summary(toys.vsurf)}

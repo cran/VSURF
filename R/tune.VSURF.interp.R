@@ -1,8 +1,8 @@
-VSURF.interp.tune <- function (res.interp, nsd = 1) {
+tune.VSURF.interp <- function (x, nsd = 1, ...) {
   
-  err.interp <- res.interp$err.interp
-  sd.min <- res.interp$sd.min
-  vars <- res.interp$varselect.thres
+  err.interp <- x$err.interp
+  sd.min <- x$sd.min
+  vars <- x$varselect.thres
 
   var.min <- which.min(err.interp)
   nvarselect <- min(which(err.interp <= (err.interp[var.min] + nsd * sd.min)))
@@ -11,5 +11,6 @@ VSURF.interp.tune <- function (res.interp, nsd = 1) {
   output <- list('varselect.interp' = varselect,
                  'err.interp' = err.interp,
                  'sd.min' = sd.min,
+                 'num.varselect.interp'= length(varselect),
                  'varselect.thres' = vars)
 }

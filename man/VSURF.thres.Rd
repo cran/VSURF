@@ -1,89 +1,109 @@
 \name{VSURF.thres}
+
 \alias{VSURF.thres}
+\alias{VSURF.thres.default}
+\alias{VSURF.thres.formula}
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{
-Thresholding step of VSURF
+  Thresholding step of VSURF
 }
 
 \description{
-Thresholding step is dedicated to roughly eliminate irrelevant variables a the dataset. This is the first step of the \code{\link{VSURF}} function. For refined variable selection, see VSURF other steps: \code{\link{VSURF.interp}} and \code{\link{VSURF.pred}}.
+  Thresholding step is dedicated to roughly eliminate irrelevant variables a the dataset. This is the first step of the \code{\link{VSURF}} function. For refined variable selection, see VSURF other steps: \code{\link{VSURF.interp}} and \code{\link{VSURF.pred}}.
 }
 
 \usage{
-VSURF.thres(x, y, ntree=500,
-            mtry=if (!is.factor(y)) max(floor(ncol(x)/3), 1)
-                 else floor(sqrt(ncol(x))),
-            nfor.thres=50, nmin=1)
+\method{VSURF.thres}{formula}(formula, data, ..., na.action=na.fail)
+\method{VSURF.thres}{default}(x, y, ntree=2000, mtry=max(floor(ncol(x)/3), 1),
+            nfor.thres=50, nmin=1, ...)
 }
 
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{x}{
-A data frame or a matrix of predictors, the columns represent the variables.
-}
+  \item{data}{a data frame containing the variables in the model.
+  }
+  \item{na.action}{A function to specify the action to be taken if NAs
+    are found.  (NOTE: If given, this argument must be named, and as
+    \code{randomForest} it is only used with the formula-type call.)}
+  \item{x, formula}{
+    A data frame or a matrix of predictors, the columns represent the
+    variables. Or a formula describing the model to be fitted.
+  }
   \item{y}{
-A response vector (must be a factor for classification problems and
-numeric for regression ones).}
+    A response vector (must be a factor for classification problems and
+    numeric for regression ones).}
   \item{ntree}{
-Number of trees in each forest grown. Standard \code{randomForest} parameter.
-}
+    Number of trees in each forest grown. Standard \code{randomForest} parameter.
+  }
   \item{mtry}{
-Number of variables randomly sampled as candidates at each split. Standard \code{randomForest} parameter.
-}
+    Number of variables randomly sampled as candidates at each split. Standard \code{randomForest} parameter.
+  }
   \item{nfor.thres}{
-Number of forests grown.
-}
+    Number of forests grown.
+  }
   \item{nmin}{
-Number of times the "minimum value" is multiplied to set threshold value. See details below.
-}
+    Number of times the "minimum value" is multiplied to set threshold value. See details below.
+  }
+    \item{...}{
+    others parameters to be passed on to the \code{randomForest}
+    function (see ?randomForest for further information)
+  }
+
 }
 
 \details{
-First, \code{nfor.thres} random forests are computed using the function
-\code{randomForest} with arguments \code{importance=TRUE}. Then
-variables are sorted according to their mean variable importance (VI),
-in decreasing order. This order is kept all along the procedure.
-Next, a threshold is computed: \code{min.thres}, the minimum predicted
-value of a pruned CART tree fitted to the curve of the standard
-deviations of VI.
-Finally, the actual thresholding is performed: only variables with a
-mean VI larger than \code{nmin} * \code{min.thres} are kept.
+  First, \code{nfor.thres} random forests are computed using the function
+  \code{randomForest} with arguments \code{importance=TRUE}. Then
+  variables are sorted according to their mean variable importance (VI),
+  in decreasing order. This order is kept all along the procedure.
+  Next, a threshold is computed: \code{min.thres}, the minimum predicted
+  value of a pruned CART tree fitted to the curve of the standard
+  deviations of VI.
+  Finally, the actual thresholding is performed: only variables with a
+  mean VI larger than \code{nmin} * \code{min.thres} are kept.
 }
 
 \value{
-A list with the following components:
- \item{varselect.thres}{
- A vector of indices of selected variables, sorted according to their mean VI, in decreasing order.
- }
- \item{imp.varselect.thres}{
- A vector of importances of the \code{varselect.thres} variables.
- }
- \item{min.thres}{
- The minimum predicted value of a pruned CART tree fitted to the curve of the standard deviations of VI.
- }
- \item{num.varselect.thres}{
-   The number of selected variables.
- }
- \item{ord.imp}{
- A list containing the order of all variables mean importance. \code{$x} contains the mean importances in decreasing order. \code{$ix} contains indices of the variables.
- }
- \item{ord.sd}{
- A vector of standard deviations of all variables importances. The order is given by \code{ord.imp}. 
- }
- \item{mean.perf}{
- The mean OOB error rate, obtained by a random forests build with all variables.
- }
- \item{pred.pruned.treee}{
-   The predictions of the CART tree fitted to the curve of the standard deviations of VI.
- }
+  An object of class \code{VSURF.thres}, which is a list with the following
+  components:
+  \item{varselect.thres}{
+    A vector of indices of selected variables, sorted according to their mean VI, in decreasing order.
+  }
+  \item{imp.varselect.thres}{
+    A vector of importances of the \code{varselect.thres} variables.
+  }
+  \item{min.thres}{
+    The minimum predicted value of a pruned CART tree fitted to the curve of the standard deviations of VI.
+  }
+  \item{num.varselect.thres}{
+    The number of selected variables.
+  }
+  \item{ord.imp}{
+    A list containing the order of all variables mean importance. \code{$x} contains the mean importances in decreasing order. \code{$ix} contains indices of the variables.
+  }
+  \item{ord.sd}{
+    A vector of standard deviations of all variables importances. The order is given by \code{ord.imp}. 
+  }
+  \item{mean.perf}{
+    The mean OOB error rate, obtained by a random forests build with all variables.
+  }
+  \item{pred.pruned.treee}{
+    The predictions of the CART tree fitted to the curve of the standard deviations of VI.
+  }
+  \item{comput.time}{
+    Computation time.
+  }
+  \item{call}{
+    The original call to \code{VSURF.thres}
+  }
 }
 
 \references{
-Genuer, R. and Poggi, J.M. and Tuleau-Malot, C. (2010), \emph{Variable selection using random forests}, Pattern Recognition Letters 31(14), 2225-2236
+  Genuer, R. and Poggi, J.M. and Tuleau-Malot, C. (2010), \emph{Variable selection using random forests}, Pattern Recognition Letters 31(14), 2225-2236
 }
 
 \author{
-Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot
+  Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot
 }
 %\note{
 %%  ~~further notes~~
@@ -92,7 +112,7 @@ Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot
 %% ~Make other sections like Warning with \section{Warning }{....} ~
 
 \seealso{
-\code{\link{VSURF}}, \code{\link{VSURF.thres.tune}}
+  \code{\link{VSURF}}, \code{\link{tune}}
 }
 \examples{
 data(iris)
@@ -100,8 +120,8 @@ iris.thres <- VSURF.thres(x=iris[,1:4], y=iris[,5], ntree=100, nfor.thres=20)
 iris.thres
 
 \dontrun{
-# A more interesting example with toys data (see ?toys)
-# (less than 1 min to execute)
+# A more interesting example with toys data (see \code{\link{toys}})
+# (a few minutes to execute)
 data(toys)
 toys.thres <- VSURF.thres(x=toys$x, y=toys$y)
 toys.thres}

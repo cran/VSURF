@@ -2,6 +2,16 @@ News about the R package VSURF:
 --------------------------------
 
 
+Main changes in Version 0.7 (2013-09-10):
+* The package can be used with the formula-type call. Hence the package can handle
+missing values (NA) (only when used with the formula-type call, as randomForest does)
+* Update of the plot.VSURF function: the two last graphs show the variables names on the
+x-axis
+* New functions (intermediate plots): plot.VSURF.thres, plot.VSURF.interp, plot.VSURF.pred
+* Functions renamed: VSURF.interp.tune -> tune.VSURF.interp, VSURF.thres.tune -> tune.thres.tune
+and S3method are now used for these functions
+
+
 Main changes in Version 0.6 (2013-07-23):
 * New functions: plot.VSURF, summary.VSURF, VSURF.interp.tune, VSURF.thres.tune.
 * Addition of a dataset: toys
