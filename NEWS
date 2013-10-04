@@ -2,6 +2,13 @@ News about the R package VSURF:
 --------------------------------
 
 
+Main changes in Version 0.7.5 (2013-10-04):
+* Only plot functions changed. It is now possible to choose the number
+of variables for the VI mean and the VI standard deviation plots.
+It is also possible to choose if VI mean and/or VI standard
+deviation plots must be plooted by function plot.VSURF.thres
+
+
 Main changes in Version 0.7 (2013-09-10):
 * The package can be used with the formula-type call. Hence the package can handle
 missing values (NA) (only when used with the formula-type call, as randomForest does)

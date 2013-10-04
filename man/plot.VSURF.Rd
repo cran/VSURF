@@ -15,8 +15,8 @@ Plot of VSURF results
 }
 
 \usage{
-\method{plot}{VSURF}(x, ...)
-\method{plot}{VSURF.thres}(x, ...)
+\method{plot}{VSURF}(x, nvar.imp=NULL, nvar.sd=NULL, ...)
+\method{plot}{VSURF.thres}(x, nvar.imp=NULL, nvar.sd=NULL, imp=TRUE, imp.sd=TRUE, ...)
 \method{plot}{VSURF.interp}(x, ...)
 \method{plot}{VSURF.pred}(x, ...)
 }
@@ -26,11 +26,25 @@ Plot of VSURF results
   \item{x}{
     An object of class \code{VSURF}, \code{VSURF.thres},
     \code{VSURF.interp} or \code{VSURF.pred}, which is the result of the
-   \code{\link{VSURF}} function (or resp. \code{\link{VSURF.thres}},
-   \code{\link{VSURF.interp}} or \code{\link{VSURF.pred}}).
- }
- \item{\dots}{
-   Not used.
+    \code{\link{VSURF}} function (or resp. \code{\link{VSURF.thres}},
+    \code{\link{VSURF.interp}} or \code{\link{VSURF.pred}}).
+  }
+  \item{nvar.imp}{
+    The number of variables to be kept for the VI mean plot (top left
+    graph).
+  }
+  \item{nvar.sd}{
+    The number of variables to be kept for the VI standard
+    deviation plot (top left graph).
+  }
+  \item{imp}{
+    If TRUE (default) VI mean is plotted, if FALSE not.
+  }
+  \item{imp.sd}{
+    If TRUE (default) VI standard deviation is plotted, if FALSE not.
+  }
+  \item{\dots}{
+    Not used.
   }
 }
 
@@ -90,8 +104,10 @@ plot(iris.vsurf)
 data(toys)
 toys.vsurf <- VSURF(x=toys$x, y=toys$y)
 plot(toys.vsurf)
+plot(toys.vsurf, nvar.imp=50, nvar.sd=50)
 toys.thres <- VSURF.thres(x=toys$x, y=toys$y)
 plot(toys.thres)
+plot(toys.thres, nvar.imp=70, imp.sd=FALSE)
 toys.interp <- VSURF.interp(x=toys$x, y=toys$y, vars=toys.thres$varselect.thres)
 par(mfrow=c(1,1))
 plot(toys.interp)
