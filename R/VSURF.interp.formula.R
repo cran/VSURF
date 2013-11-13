@@ -35,5 +35,9 @@ VSURF.interp.formula <- function(formula, data, ..., na.action = na.fail) {
     if (!is.null(attr(m, "na.action")))
         ret$na.action <- attr(m, "na.action")
     class(ret) <- c("VSURF.interp.formula", "VSURF.interp")
+    warning(
+        "VSURF with a formula-type call outputs selected variables
+  which are indices of the input matrix based on the formula:
+  you may reorder these to get indices of the original data")
     return(ret)
 }

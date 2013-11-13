@@ -1,7 +1,7 @@
 VSURF.formula <- function(formula, data, ..., na.action = na.fail) {
-### formula interface for VSURF.
-### code gratefully stolen from svm.formula (package e1071).
-###
+    ### formula interface for VSURF.
+    ### code gratefully stolen from svm.formula (package e1071).
+    ###
     if (!inherits(formula, "formula"))
         stop("method is only for formula objects")
     m <- match.call(expand.dots = FALSE)
@@ -27,7 +27,7 @@ VSURF.formula <- function(formula, data, ..., na.action = na.fail) {
     for (i in seq(along=ncol(m))) {
         if (is.ordered(m[[i]])) m[[i]] <- as.numeric(m[[i]])
     }
-    ret <- VSURF(m, y, ...)
+    ret <- VSURF(x=m, y=y, ...)
     cl <- match.call()
     cl[[1]] <- as.name("VSURF")
     ret$call <- cl
@@ -35,5 +35,9 @@ VSURF.formula <- function(formula, data, ..., na.action = na.fail) {
     if (!is.null(attr(m, "na.action")))
         ret$na.action <- attr(m, "na.action")
     class(ret) <- c("VSURF.formula", "VSURF")
+    warning(
+        "VSURF with a formula-type call outputs selected variables
+  which are indices of the input matrix based on the formula:
+  you may reorder these to get indices of the original data")
     return(ret)
 }

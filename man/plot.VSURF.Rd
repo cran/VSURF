@@ -15,10 +15,11 @@ Plot of VSURF results
 }
 
 \usage{
-\method{plot}{VSURF}(x, nvar.imp=NULL, nvar.sd=NULL, ...)
-\method{plot}{VSURF.thres}(x, nvar.imp=NULL, nvar.sd=NULL, imp=TRUE, imp.sd=TRUE, ...)
-\method{plot}{VSURF.interp}(x, ...)
-\method{plot}{VSURF.pred}(x, ...)
+\method{plot}{VSURF}(x, nvar.imp=NULL, nvar.sd=NULL, var.names=FALSE, ...)
+\method{plot}{VSURF.thres}(x, nvar.imp=NULL, nvar.sd=NULL, imp=TRUE,
+     imp.sd=TRUE, var.names=FALSE, ...)
+\method{plot}{VSURF.interp}(x, var.names=FALSE,...)
+\method{plot}{VSURF.pred}(x, var.names=FALSE, ...)
 }
 
 %- maybe also 'usage' for other objects documented here.
@@ -43,8 +44,13 @@ Plot of VSURF results
   \item{imp.sd}{
     If TRUE (default) VI standard deviation is plotted, if FALSE not.
   }
+  \item{var.names}{
+    If FALSE (default) xticks are the numbering given by the sorting of
+    VI mean, if TRUE they are the variables names.
+  }
   \item{\dots}{
-    Not used.
+    Arguments to be passed to \code{\link{par}} (they will affect all
+    plots)
   }
 }
 
@@ -95,9 +101,9 @@ Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot
 \examples{
 \dontrun{
 data(iris)
-iris.vsurf <- VSURF(x=iris[,1:4], y=iris[,5], ntree=100, nfor.thres=20,
-                    nfor.interp=10, nfor.pred=10)
+iris.vsurf <- VSURF(x=iris[,1:4], y=iris[,5])
 plot(iris.vsurf)
+plot(iris.vsurf, var.names=TRUE)
 
 # A more interesting example with toys data (see \code{\link{toys}})
 # (a few minutes to execute) and intermediate functions
@@ -107,13 +113,13 @@ plot(toys.vsurf)
 plot(toys.vsurf, nvar.imp=50, nvar.sd=50)
 toys.thres <- VSURF.thres(x=toys$x, y=toys$y)
 plot(toys.thres)
+par(mfrow=c(1,1))
 plot(toys.thres, nvar.imp=70, imp.sd=FALSE)
 toys.interp <- VSURF.interp(x=toys$x, y=toys$y, vars=toys.thres$varselect.thres)
-par(mfrow=c(1,1))
-plot(toys.interp)
+plot(toys.interp, var.names=TRUE)
 toys.pred <- VSURF.pred(x=toys$x, y=toys$y, err.interp=toys.interp$err.interp,
                         varselect.interp=toys.interp$varselect.interp)
-plot(toys.pred)
+plot(toys.pred, var.names=TRUE)
 }
 }
 

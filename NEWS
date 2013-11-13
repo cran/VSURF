@@ -2,6 +2,17 @@ News about the R package VSURF:
 --------------------------------
 
 
+Main changes in Version 0.7.6 (2013-11-13):
+* Plot functions changed. It is now possible to plot VI mean
+and VI standard deviation against variables names with function
+plot.VSURF.thres. By default index variables are plotted, and
+var.names argument is added to all plot functions
+* Bug concerning ylab and yticks fixed
+* Addition of a warning when using formula method of VSURF,
+VSURF.thres, VSURF.interp and VSURF.pred: indices of selected
+variables must be reordered to get indices of the original
+dataset
+
 Main changes in Version 0.7.5 (2013-10-04):
 * Only plot functions changed. It is now possible to choose the number
 of variables for the VI mean and the VI standard deviation plots.
