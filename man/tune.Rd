@@ -1,81 +1,59 @@
-\name{tune}
-
+\name{tune.VSURF.thres}
 \alias{tune}
-\alias{tune.VSURF.thres}
 \alias{tune.VSURF.interp}
-%- Also NEED an '\alias' for EACH other topic documented here.
-
-\title{
-Tuning of the thresholding and interpretation steps of VSURF
-}
-
-\description{
-This function allows to tune the "thresholding" and "interpretation
-step" of VSURF, without rerunning all computations.
-}
-
+\alias{tune.VSURF.thres}
+\title{Tuning of the thresholding and interpretation steps of VSURF}
 \usage{
-\method{tune}{VSURF.thres}(x, nmin = 1, ...)
-\method{tune}{VSURF.interp}(x, nsd = 1, ...)
-}
+  \method{tune}{VSURF.thres} (x, nmin = 1, ...)
 
-%- maybe also 'usage' for other objects documented here.
+  \method{tune}{VSURF.interp} (x, nsd = 1, ...)
+}
 \arguments{
-  \item{x}{
-    An object of class \code{VSURF.thres} or \code{VSURF.interp}, which is the result of the
-    \code{\link{VSURF.thres}} or \code{\link{VSURF.interp}} function.
-  }
-  \item{nmin}{
-    Number of times the "minimum value" is multiplied to set threshold value. See details below.    
-  }
-  \item{nsd}{
-    Number of times the standard deviation of the minimum value of \code{err.interp} is multiplied. See details below.
-  }
-  \item{\dots}{
-   Not used.
- }
-}
+  \item{x}{An object of class \code{VSURF.thres} or
+  \code{VSURF.interp}, which is the result of the
+  \code{\link{VSURF.thres}} or \code{\link{VSURF.interp}}
+  function.}
 
+  \item{nmin}{Number of times the "minimum value" is
+  multiplied to set threshold value. See details below.}
+
+  \item{nsd}{Number of times the standard deviation of the
+  minimum value of \code{err.interp} is multiplied. See
+  details below.}
+
+  \item{\dots}{Not used.}
+}
+\value{
+  An object with the same structure than the original
+  output (from \code{\link{VSURF.thres}} or
+  \code{\link{VSURF.interp}}).
+}
+\description{
+  This function allows to tune the "thresholding" and
+  "interpretation step" of VSURF, without rerunning all
+  computations.
+}
 \details{
-  In \code{\link{VSURF.thres}} function, the actual threshold is
-  performed like this: only variables with a mean VI larger
-  than \code{nmin} * \code{min.thres} are kept.
-  The function \code{tune.VSURF.thres} allows you to change the value of
-  \code{nmin} (which multiply the estimated threshold value
-  \code{min.thres}), without rerunning all computations.
-  To get a softer threshold than default, choose a value of \code{nmin} less than 1,
+  In \code{\link{VSURF.thres}} function, the actual
+  threshold is performed like this: only variables with a
+  mean VI larger than \code{nmin} * \code{min.thres} are
+  kept.  The function \code{tune.VSURF.thres} allows you to
+  change the value of \code{nmin} (which multiply the
+  estimated threshold value \code{min.thres}), without
+  rerunning all computations.  To get a softer threshold
+  than default, choose a value of \code{nmin} less than 1,
   and to get a harder one, choose a value larger than 1.
 
-  In \code{\link{VSURF.interp}} function, the smallest model
-  (and hence its corresponding variables) having a mean OOB error rate
-  less than \code{err.min} + \code{nsd} * \code{sd.min} is selected.
-  The function \code{tune.VSURF.interp} allows to change the value of
-  \code{nsd} (which multiply the standard deviation of the minimum OOB
-  error rate \code{sd.min}), without rerunning all computations.
-  To get a larger model than default, choose a value of \code{nsd} less than 1,
-  and to get a smaller one, choose a value larger than 1.
-}
-
-\value{
-  An object with the same structure than the original output
-  (from \code{\link{VSURF.thres}} or \code{\link{VSURF.interp}}).
-}
-
-\references{
-Genuer, R. and Poggi, J.M. and Tuleau-Malot, C. (2010), \emph{Variable selection using random forests}, Pattern Recognition Letters 31(14), 2225-2236
-}
-
-\author{
-Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot
-}
-%\note{
-%%  ~~further notes~~
-%}
-
-%% ~Make other sections like Warning with \section{Warning }{....} ~
-
-\seealso{
-\code{\link{VSURF}}, \code{\link{VSURF.thres}}, \code{\link{VSURF.interp}}
+  In \code{\link{VSURF.interp}} function, the smallest
+  model (and hence its corresponding variables) having a
+  mean OOB error rate less than \code{err.min} + \code{nsd}
+  * \code{sd.min} is selected.  The function
+  \code{tune.VSURF.interp} allows to change the value of
+  \code{nsd} (which multiply the standard deviation of the
+  minimum OOB error rate \code{sd.min}), without rerunning
+  all computations.  To get a larger model than default,
+  choose a value of \code{nsd} less than 1, and to get a
+  smaller one, choose a value larger than 1.
 }
 \examples{
 \dontrun{
@@ -89,8 +67,17 @@ iris.interp.tuned <- tune(x=iris.interp, nsd=10)
 iris.interp.tuned
 }
 }
+\author{
+  Robin Genuer, Jean-Michel Poggi and Christine
+  Tuleau-Malot
+}
+\references{
+  Genuer, R. and Poggi, J.M. and Tuleau-Malot, C. (2010),
+  \emph{Variable selection using random forests}, Pattern
+  Recognition Letters 31(14), 2225-2236
+}
+\seealso{
+  \code{\link{VSURF}}, \code{\link{VSURF.thres}},
+  \code{\link{VSURF.interp}}
+}
 
-% Add one or more standard keywords, see file 'KEYWORDS' in the
-% R documentation directory.
-%\keyword{ ~kwd1 }
-%\keyword{ ~kwd2 }% __ONLY ONE__ keyword per line

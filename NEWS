@@ -2,6 +2,17 @@ News about the R package VSURF:
 --------------------------------
 
 
+Main changes in Version 0.8 (2013-11-23):
+* Parallel version of VSURF added. Three new main functions:
+VSURF.parallel, VSURF.thres.parallel and VSURF.interp.parallel.
+Default for these functions is to run VSURF in parallel on a
+(local) SOCKET cluster with "number of cores detected by R" minus
+one core
+* Addition of a print function for VSURF results
+* Bug fix: the fact that the prediction step can not run
+does not give an error anymore
+
+
 Main changes in Version 0.7.6 (2013-11-13):
 * Plot functions changed. It is now possible to plot VI mean
 and VI standard deviation against variables names with function
@@ -12,6 +23,7 @@ var.names argument is added to all plot functions
 VSURF.thres, VSURF.interp and VSURF.pred: indices of selected
 variables must be reordered to get indices of the original
 dataset
+
 
 Main changes in Version 0.7.5 (2013-10-04):
 * Only plot functions changed. It is now possible to choose the number

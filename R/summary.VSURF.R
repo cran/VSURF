@@ -1,3 +1,38 @@
+#' Summary of VSURF results
+#' 
+#' This function display a summary of VSURF results
+#' 
+#' This function prints the total computation time of VSURF.  It also gives the
+#' number of selected variables (and the computation time) at each step of
+#' VSURF. In addition, it gives the number of cores and the type of cluster
+#' if the parallel version of VSURF was used.
+#' 
+#' @param object An object of class \code{VSURF}, which is the result of the
+#' \code{\link{VSURF}} function.
+#' @param \dots Not used.
+#' 
+#' @author Robin Genuer, Jean-Michel Poggi and Christine Tuleau-Malot
+#' @seealso \code{\link{VSURF}}, \code{\link{plot.VSURF}}
+#' @references Genuer, R. and Poggi, J.M. and Tuleau-Malot, C. (2010),
+#' \emph{Variable selection using random forests}, Pattern Recognition Letters
+#' 31(14), 2225-2236
+#' @examples
+#' 
+#' \dontrun{
+#' data(iris)
+#' iris.vsurf <- VSURF(x=iris[,1:4], y=iris[,5], ntree=100, nfor.thres=20,
+#'                     nfor.interp=10, nfor.pred=10)
+#' summary(iris.vsurf)
+#' 
+#' # A more interesting example with toys data (see \code{\link{toys}})
+#' # (a few minutes to execute)
+#' data(toys)
+#' toys.vsurf <- VSURF(x=toys$x, y=toys$y)
+#' summary(toys.vsurf)}
+#' 
+#' @method summary VSURF
+#' @S3method summary VSURF
+#' @export summary.VSURF
 summary.VSURF <- function(object, ...) {
   
   cat(paste("\n VSURF computation time:", round(object$overall.time, 1),
@@ -16,4 +51,9 @@ summary.VSURF <- function(object, ...) {
             attributes(object$comput.times[[3]])$units, ")", "\n",
             sep="")
       )
+
+  if (!is.null(object$ncores)) {
+    cat(paste("\n VSURF ran in parallel on a", object$clusterType,
+              "cluster and used", object$ncores, "cores", "\n", sep=" "))
+  }
 }
