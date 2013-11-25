@@ -162,8 +162,8 @@ did not eliminate variables")
         if ((t-z) > nmj*mean.jump){
             varselect.pred <- c(varselect.pred, varselect.interp[i])
             err.pred <- c(err.pred, z)
+            t <- z
         }
-        t <- z
       }
     }
   }

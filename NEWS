@@ -2,6 +2,11 @@ News about the R package VSURF:
 --------------------------------
 
 
+Main changes in Version 0.8.1 (2014-01-28):
+* Bug fix: error of the model was wrongly updated in
+the VSURF.pred function. Thanks a lot to Dustin Fife.
+
+
 Main changes in Version 0.8 (2013-11-23):
 * Parallel version of VSURF added. Three new main functions:
 VSURF.parallel, VSURF.thres.parallel and VSURF.interp.parallel.
