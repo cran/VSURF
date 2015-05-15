@@ -16,13 +16,12 @@
 ##'
 ##' \dontrun{
 ##' data(iris)
-##' iris.vsurf <- VSURF(x=iris[,1:4], y=iris[,5], ntree=100, nfor.thres=20,
-##'                     nfor.interp=10, nfor.pred=10)
+##' iris.vsurf <- VSURF(iris[,1:4], iris[,5], ntree = 100, nfor.thres = 20,
+##'                     nfor.interp = 10, nfor.pred = 10)
 ##' iris.vsurf
 ##' }
 ##'
-##' @method print VSURF
-##' @export print.VSURF
+##' @export
 print.VSURF <- function(x, ...) {
     
     cat(paste("** VSURF results **", 

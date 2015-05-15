@@ -1,7 +1,7 @@
 #' Prediction step of VSURF
 #' 
 #' Prediction step refines the selection of intepretation step
-#' \code{\link{VSURF.interp}} by eliminating redundancy in the set of variables
+#' \code{\link{VSURF_interp}} by eliminating redundancy in the set of variables
 #' selected, for prediction prupose. This is the third step of the
 #' \code{\link{VSURF}} function.
 #' 
@@ -14,7 +14,12 @@
 #' included in the model if the mean OOB error decrease is larger than
 #' \code{nmj} * \code{mean.jump}.
 #' 
-#' @aliases VSURF.pred VSURF.pred.default VSURF.pred.formula
+#' Note that,
+#' the \code{mtry} parameter of \code{randomForest} is set to its default value
+#' (see \code{\link{randomForest}}) if \code{nvm}, the number of variables
+#' in the model, is not greater than the number of observations,
+#' while it is set to \code{nvm/3} otherwise. This is to ensure quality of OOB
+#' error estimations along embedded RF models.
 #' 
 #' @param data a data frame containing the variables in the model.
 #' @param na.action A function to specify the action to be taken if NAs are
@@ -24,9 +29,11 @@
 #' represent the variables. Or a formula describing the model to be fitted.
 #' @param y A response vector (must be a factor for classification problems and
 #' numeric for regression ones).
+#' @param ntree Number of trees in each forests grown. Standard parameter of
+#' \code{randomForest}.
 #' @param err.interp A vector of the mean OOB error rates of the embedded
 #' random forests models build during interpretation step (value
-#' \code{err.interp} of function \code{\link{VSURF.interp}}).
+#' \code{err.interp} of function \code{\link{VSURF_interp}}).
 #' @param varselect.interp A vector of indices of variables selected after
 #' interpretation step.
 #' @param nfor.pred Number of forests grown.
@@ -34,7 +41,7 @@
 #' @param ...  others parameters to be passed on to the \code{\link{VSURF}}
 #' function.
 #' 
-#' @return An object of class \code{VSURF.pred}, which is a list with the
+#' @return An object of class \code{VSURF_pred}, which is a list with the
 #' following components:
 #' 
 #' \item{varselect.pred}{A vector of indices of variables selected after
@@ -47,6 +54,8 @@
 #' step".}
 #' 
 #' \item{num.varselect.pred}{The number of selected variables.}
+#' 
+#' \item{nmj}{Value of the parameter in the call.}
 #' 
 #' \item{comput.time}{Computation time.}
 #'
@@ -63,50 +72,63 @@
 #' @examples
 #' 
 #' data(iris)
-#' iris.thres <- VSURF.thres(x=iris[,1:4], y=iris[,5], ntree=100, nfor.thres=20)
-#' iris.interp <- VSURF.interp(x=iris[,1:4], y=iris[,5], vars=iris.thres$varselect.thres,
-#'                             nfor.interp=10)
-#' iris.pred <- VSURF.pred(x=iris[,1:4], y=iris[,5], err.interp=iris.interp$err.interp,
-#'                         varselect.interp=iris.interp$varselect.interp, nfor.pred=10)
+#' iris.thres <- VSURF_thres(iris[,1:4], iris[,5], ntree = 100, nfor.thres = 20)
+#' iris.interp <- VSURF_interp(iris[,1:4], iris[,5], vars = iris.thres$varselect.thres,
+#'                             nfor.interp = 10)
+#' iris.pred <- VSURF_pred(iris[,1:4], iris[,5], err.interp = iris.interp$err.interp,
+#'                         varselect.interp = iris.interp$varselect.interp, nfor.pred = 10)
 #' iris.pred
 #' 
 #' \dontrun{
 #' # A more interesting example with toys data (see \code{\link{toys}})
 #' # (a few minutes to execute)
 #' data(toys)
-#' toys.thres <- VSURF.thres(x=toys$x, y=toys$y)
-#' toys.interp <- VSURF.interp(x=toys$x, y=toys$y, vars=toys.thres$varselect.thres)
-#' toys.pred <- VSURF.pred(x=toys$x, y=toys$y, err.interp=toys.interp$err.interp,
-#'                         varselect.interp=toys.interp$varselect.interp)
+#' toys.thres <- VSURF_thres(toys$x, toys$y)
+#' toys.interp <- VSURF_interp(toys$x, toys$y, vars = toys.thres$varselect.thres)
+#' toys.pred <- VSURF_pred(toys$x, toys$y, err.interp = toys.interp$err.interp,
+#'                         varselect.interp = toys.interp$varselect.interp)
 #' toys.pred}
 #'
-#' @rdname VSURF.pred
-#' @method VSURF.pred default
-#' @export VSURF.pred.default
-VSURF.pred.default <-function(x, y, err.interp, varselect.interp, nfor.pred=25, nmj=1, ...){
+#' @importFrom randomForest randomForest
+#' @export
+VSURF_pred <- function (x, ...) {
+  UseMethod("VSURF_pred")
+}
+
+#' @rdname VSURF_pred
+#' @export
+VSURF_pred.default <-function(x, y, ntree = 2000, err.interp, varselect.interp,
+                              nfor.pred=25, nmj=1, ...){
   
   # err.interp: interpretation models errors
   # varselect.interp: interpretation variables indices
   # nmj: number of mean jump: addition of a variable if it gives an error reduction of at
   # least nmj * mean jump value
-
+  
   start <- Sys.time()
   
-  # one forest run to determine the problem type: classification or regression
-  rf <- randomForest(x=x, y=y, ...)
-  if (rf$type=="classification") {
+  # determinination the problem type: classification or regression
+  # (code gratefully stolen from randomForest.default function of randomForest package)
+  classRF <- is.factor(y)
+  if (!classRF && length(unique(y)) <= 5) {
+    warning("The response has five or fewer unique values.  Are you sure you want to do regression?")
+  }
+  if (classRF && length(unique(y)) < 2)
+    stop("Need at least two classes to do classification.")
+  
+  if (classRF) {
     type <- "classif"
   }
-  if (rf$type=="regression") {
+  else {
     type <- "reg"
-  } 
-
+  }
+  
   k <- length(err.interp)
   l <- length(varselect.interp)
   
   if (k==l) {
     warning(
-"Unable to perform prediction step, because the interpretation step
+      "Unable to perform prediction step, because the interpretation step
 did not eliminate variables")
     varselect.pred <- NULL
     err.pred <- NULL
@@ -123,19 +145,21 @@ did not eliminate variables")
     
     # comparison between the error with the variable and the precedent error
     # and test of the addition of the variable
+    n <- nrow(x)
     varselect.pred <- varselect.interp[1]
     u <- varselect.pred
     w <- x[,u, drop=FALSE]
     rf <- rep(NA, nfor.pred)
     if (type=="classif") {
       for (j in 1:nfor.pred) {
-          rf[j] <- tail(randomForest(x=w, y=y, ...)$err.rate[,1], n=1)
-        }
+        rf[j] <- tail(randomForest::randomForest(x=w, y=y, ...)$err.rate[,1], n=1)
+      }
+      
       err.pred <- mean(rf)
     }
     if (type=="reg") {
       for (j in 1:nfor.pred) {
-        rf[j] <- tail(randomForest(x=w, y=y, ...)$mse, n=1)
+        rf[j] <- tail(randomForest::randomForest(x=w, y=y, ...)$mse, n=1)
       }
       err.pred <- mean(rf)
     }
@@ -147,16 +171,24 @@ did not eliminate variables")
         w <- x[,u, drop=FALSE]
         rf <- rep(NA, nfor.pred)
         if (type=="classif") {
+          if (i <= n) {
             for (j in 1:nfor.pred) {
-                rf[j] <- tail(randomForest(x=w, y=y, ...)$err.rate[,1], n=1)
+              rf[j] <- tail(randomForest::randomForest(x=w, y=y, ...)$err.rate[,1], n=1)
             }
-            z <- mean(rf)
+          }
+          
+          else {
+            for (j in 1:nfor.pred) {
+              rf[j] <- tail(randomForest::randomForest(x=w, y=y, mtry=i/3, ...)$err.rate[,1], n=1)
+            }
+          }
+          z <- mean(rf)
         }
         if (type=="reg") {
-            for (j in 1:nfor.pred) {
-                rf[j] <- tail(randomForest(x=w, y=y, ...)$mse, n=1)
-            }
-            z <- mean(rf)
+          for (j in 1:nfor.pred) {
+            rf[j] <- tail(randomForest::randomForest(x=w, y=y, ...)$mse, n=1)
+          }
+          z <- mean(rf)
         }
         if ((t-z) > nmj*mean.jump){
             varselect.pred <- c(varselect.pred, varselect.interp[i])
@@ -168,7 +200,7 @@ did not eliminate variables")
   }
 
   cl <- match.call()
-  cl[[1]] <- as.name("VSURF.pred")
+  cl[[1]] <- as.name("VSURF_pred")
 
   comput.time <- Sys.time()-start
   
@@ -176,18 +208,18 @@ did not eliminate variables")
                  'err.pred'=err.pred,
                  'mean.jump'=mean.jump,
                  'num.varselect.pred'=length(varselect.pred),
+                 'nmj' = nmj,
                  'comput.time'=comput.time,
                  'call'=cl)
-  class(output) <- "VSURF.pred"
+  class(output) <- c("VSURF_pred")
   output
 }
 
 
-#' @rdname VSURF.pred
-#' @method VSURF.pred formula
-#' @export VSURF.pred.formula
-VSURF.pred.formula <- function(formula, data, ..., na.action = na.fail) {
-### formula interface for VSURF.pred.
+#' @rdname VSURF_pred
+#' @export
+VSURF_pred.formula <- function(formula, data, ..., na.action = na.fail) {
+### formula interface for VSURF_pred.
 ### code gratefully stolen from svm.formula (package e1071).
 ###
     if (!inherits(formula, "formula"))
@@ -215,23 +247,17 @@ VSURF.pred.formula <- function(formula, data, ..., na.action = na.fail) {
     for (i in seq(along=ncol(m))) {
         if (is.ordered(m[[i]])) m[[i]] <- as.numeric(m[[i]])
     }
-    ret <- VSURF.pred(m, y, ...)
+    ret <- VSURF_pred(m, y, ...)
     cl <- match.call()
-    cl[[1]] <- as.name("VSURF.pred")
+    cl[[1]] <- as.name("VSURF_pred")
     ret$call <- cl
     ret$terms <- Terms
     if (!is.null(attr(m, "na.action")))
         ret$na.action <- attr(m, "na.action")
-    class(ret) <- c("VSURF.pred.formula", "VSURF.pred")
+    class(ret) <- c("VSURF_pred.formula", class(ret))
     warning(
         "VSURF with a formula-type call outputs selected variables
   which are indices of the input matrix based on the formula:
   you may reorder these to get indices of the original data")
     return(ret)
-}
-
-
-#' @export
-VSURF.pred <- function (x, ...) {
-  UseMethod("VSURF.pred")
 }
