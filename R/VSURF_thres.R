@@ -33,7 +33,7 @@
 #' @param nfor.thres Number of forests grown.
 #' @param nmin Number of times the "minimum value" is multiplied to set
 #' threshold value. See details below.
-#' @param para A logical indicating if you want VSURF to run in parallel on
+#' @param parallel A logical indicating if you want VSURF to run in parallel on
 #' multiple cores (default to FALSE).
 #' @param ncores Number of cores to use. Default is set to the number of cores
 #' detected by R minus 1.
@@ -108,16 +108,13 @@
 #' toys.thres}
 #'
 #' @importFrom randomForest randomForest
-#' @importFrom rpart rpart
-#' @importFrom rpart rpart.control
-#' @importFrom rpart prune
+#' @importFrom rpart rpart prune
 #' @importFrom doParallel registerDoParallel
-#' @importFrom foreach foreach
-#' @importFrom foreach %dopar%
-#' @importFrom parallel makeCluster
-#' @importFrom parallel stopCluster
-#' @importFrom parallel mclapply
-#' @importFrom parallel detectCores
+#' @importFrom foreach foreach %dopar%
+#' @importFrom parallel makeCluster stopCluster mclapply detectCores
+#' @importFrom utils tail
+#' @importFrom stats model.frame model.response na.fail predict reformulate
+#' @importFrom stats sd terms
 #' @export
 VSURF_thres <- function (x, ...) {
   UseMethod("VSURF_thres")
@@ -126,8 +123,8 @@ VSURF_thres <- function (x, ...) {
 #' @rdname VSURF_thres
 #' @export
 VSURF_thres.default <- function(
-  x, y, ntree=2000, mtry=max(floor(ncol(x)/3), 1), nfor.thres=50, nmin=1,
-  para=FALSE, clusterType="PSOCK", ncores=detectCores()-1, ...) {
+  x, y, ntree = 2000, mtry = max(floor(ncol(x) / 3), 1), nfor.thres = 50, nmin = 1,
+  parallel = FALSE, clusterType = "PSOCK", ncores = detectCores() - 1, ...) {
   
   # x: input
   # y: output
@@ -137,7 +134,7 @@ VSURF_thres.default <- function(
   
   start <- Sys.time()
   
-  if (!para) {
+  if (!parallel) {
     clusterType <- NULL
     ncores <- NULL
   }
@@ -185,7 +182,7 @@ VSURF_thres.default <- function(
     out <- list(m=m, perf=perf)
   }
   
-  if (!para) {
+  if (!parallel) {
     if (type=="classif") {
       for (i in 1:nfor.thres){
         rf <- rf.classif(i, ...)
@@ -260,7 +257,7 @@ VSURF_thres.default <- function(
     # estimation of the standard deviations curve with CART (using "rpart" package)
     
     # construction of the maximal tree and search of optimal complexity
-    tree <- rpart::rpart(imp.sd.dec ~., data=u, control=rpart::rpart.control(cp=0, minsplit=2))
+    tree <- rpart::rpart(imp.sd.dec ~., data=u, cp=0, minsplit=2)
     d <- tree$cptable
     argmin.cp <- which.min(d[,4])
     
