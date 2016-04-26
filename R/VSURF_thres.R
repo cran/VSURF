@@ -94,6 +94,10 @@
 #' @references Genuer, R. and Poggi, J.M. and Tuleau-Malot, C. (2010),
 #' \emph{Variable selection using random forests}, Pattern Recognition Letters
 #' 31(14), 2225-2236
+#' @references Genuer, R. and Poggi, J.M. and Tuleau-Malot, C. (2015),
+#' \emph{VSURF: An R Package for Variable Selection Using Random Forests},
+#' The R Journal 7(2):19-33
+#' 
 #' @examples
 #' 
 #' data(iris)
@@ -114,7 +118,7 @@
 #' @importFrom parallel makeCluster stopCluster mclapply detectCores
 #' @importFrom utils tail
 #' @importFrom stats model.frame model.response na.fail predict reformulate
-#' @importFrom stats sd terms
+#' @importFrom stats sd terms na.omit
 #' @export
 VSURF_thres <- function (x, ...) {
   UseMethod("VSURF_thres")
@@ -231,6 +235,16 @@ VSURF_thres.default <- function(
       m[i,] <- res[[i]]$m
       perf[i] <- res[[i]]$perf
     }
+  }
+  
+  m_na.omit <- stats::na.omit(m)
+  if (nrow(m_na.omit) != nrow(m)) {
+      warning(
+          paste0(nrow(m) - nrow(m_na.omit), " runs of randomForest were removed
+                (among ", nfor.thres, ") because they contained no OOB
+                observations for some trees")
+      )
+      m <- m_na.omit
   }
   
   # ord.imp contains the VI means in decreasing order
