@@ -1,8 +1,8 @@
 Package: VSURF
 Type: Package
 Title: Variable Selection Using Random Forests
-Version: 1.0.4
-Date: 2018-04-09
+Version: 1.1.0
+Date: 2019-07-17
 Depends: R (>= 3.2.2)
 Authors@R: c(person("Robin", "Genuer", email = "Robin.Genuer@u-bordeaux.fr", role = c("aut", "cre")),
              person("Jean-Michel", "Poggi", role = "aut"),
@@ -16,20 +16,21 @@ Description: Three steps variable selection procedure based on random forests.
     variables related to the response for interpretation purpose. Third step
     refines the selection by eliminating redundancy in the set of variables
     selected by the second step, for prediction purpose.
-    Genuer, R. and Poggi, J.M. and Tuleau-Malot, C. (2015)
+    Genuer, R. Poggi, J.-M. and Tuleau-Malot, C. (2015)
     <https://journal.r-project.org/archive/2015-2/genuer-poggi-tuleaumalot.pdf>.
 License: GPL (>= 2)
 LazyData: true
 URL: https://github.com/robingenuer/VSURF
 BugReports: https://github.com/robingenuer/VSURF/issues
-Imports: doParallel, foreach, parallel, randomForest, rpart
-Suggests: testthat
-RoxygenNote: 6.0.1
+Imports: doParallel, foreach, parallel, Rborist, randomForest, ranger,
+        rpart
+Suggests: testthat,
+RoxygenNote: 6.1.1
 NeedsCompilation: no
-Packaged: 2018-04-09 15:37:28 UTC; rg
+Packaged: 2019-07-17 14:07:20 UTC; rg
 Author: Robin Genuer [aut, cre],
   Jean-Michel Poggi [aut],
   Christine Tuleau-Malot [aut]
 Maintainer: Robin Genuer <Robin.Genuer@u-bordeaux.fr>
 Repository: CRAN
-Date/Publication: 2018-04-10 10:08:41 UTC
+Date/Publication: 2019-07-18 06:36:21 UTC
