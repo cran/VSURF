@@ -1,9 +1,9 @@
 Package: VSURF
 Type: Package
 Title: Variable Selection Using Random Forests
-Version: 1.1.0
-Date: 2019-07-17
-Depends: R (>= 3.2.2)
+Version: 1.2.0
+Date: 2022-12-15
+Depends: R (>= 4.2.0)
 Authors@R: c(person("Robin", "Genuer", email = "Robin.Genuer@u-bordeaux.fr", role = c("aut", "cre")),
              person("Jean-Michel", "Poggi", role = "aut"),
              person("Christine", "Tuleau-Malot", role = "aut"))
@@ -22,15 +22,14 @@ License: GPL (>= 2)
 LazyData: true
 URL: https://github.com/robingenuer/VSURF
 BugReports: https://github.com/robingenuer/VSURF/issues
-Imports: doParallel, foreach, parallel, Rborist, randomForest, ranger,
-        rpart
-Suggests: testthat,
-RoxygenNote: 6.1.1
+Imports: doParallel, foreach, parallel, randomForest, rpart
+Suggests: testthat, ranger, Rborist
+RoxygenNote: 7.1.2
 NeedsCompilation: no
-Packaged: 2019-07-17 14:07:20 UTC; rg
+Packaged: 2022-12-15 12:56:15 UTC; rg
 Author: Robin Genuer [aut, cre],
   Jean-Michel Poggi [aut],
   Christine Tuleau-Malot [aut]
 Maintainer: Robin Genuer <Robin.Genuer@u-bordeaux.fr>
 Repository: CRAN
-Date/Publication: 2019-07-18 06:36:21 UTC
+Date/Publication: 2022-12-15 13:20:02 UTC

@@ -8,10 +8,21 @@
 \usage{
 VSURF_thres(x, ...)
 
-\method{VSURF_thres}{default}(x, y, ntree = 2000,
-  mtry = max(floor(ncol(x)/3), 1), nfor.thres = 50, nmin = 1,
-  RFimplem = "randomForest", parallel = FALSE, clusterType = "PSOCK",
-  ncores = parallel::detectCores() - 1, verbose = TRUE, ...)
+\method{VSURF_thres}{default}(
+  x,
+  y,
+  mtry = max(floor(ncol(x)/3), 1),
+  ntree.thres = 500,
+  nfor.thres = 20,
+  nmin = 1,
+  RFimplem = "randomForest",
+  parallel = FALSE,
+  clusterType = "PSOCK",
+  ncores = parallel::detectCores() - 1,
+  verbose = TRUE,
+  ntree = NULL,
+  ...
+)
 
 \method{VSURF_thres}{formula}(formula, data, ..., na.action = na.fail)
 }
@@ -25,11 +36,10 @@ function (see ?randomForest for further information).}
 \item{y}{A response vector (must be a factor for classification problems and
 numeric for regression ones).}
 
-\item{ntree}{Number of trees in each forests grown. Standard parameter of
-\code{randomForest}.}
-
 \item{mtry}{Number of variables randomly sampled as candidates at each split.
 Standard parameter of \code{randomForest}.}
+
+\item{ntree.thres}{Number of trees of each forest grown.}
 
 \item{nfor.thres}{Number of forests grown.}
 
@@ -65,6 +75,9 @@ detected by R minus 1.}
 \item{verbose}{A logical indicating if information about method's progress
 (included progress bars for each step) must be printed (default to TRUE).
 Adds a small extra overload.}
+
+\item{ntree}{(deprecated) Number of trees in each forest grown for
+"thresholding step".}
 
 \item{data}{a data frame containing the variables in the model.}
 
@@ -141,11 +154,11 @@ variables with a mean VI larger than \code{nmin} * \code{min.thres} are kept.
 \examples{
 
 data(iris)
-iris.thres <- VSURF_thres(iris[,1:4], iris[,5], ntree = 100, nfor.thres = 20)
+iris.thres <- VSURF_thres(iris[,1:4], iris[,5])
 iris.thres
 
 \dontrun{
-# A more interesting example with toys data (see \\code{\\link{toys}})
+# A more interesting example with toys data (see \code{\link{toys}})
 # (a few minutes to execute)
 data(toys)
 toys.thres <- VSURF_thres(toys$x, toys$y)

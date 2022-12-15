@@ -8,10 +8,21 @@
 \usage{
 VSURF_interp(x, ...)
 
-\method{VSURF_interp}{default}(x, y, ntree = 2000, vars,
-  nfor.interp = 25, nsd = 1, RFimplem = "randomForest",
-  parallel = FALSE, ncores = detectCores() - 1,
-  clusterType = "PSOCK", verbose = TRUE, ...)
+\method{VSURF_interp}{default}(
+  x,
+  y,
+  vars,
+  ntree.interp = 100,
+  nfor.interp = 25,
+  nsd = 1,
+  RFimplem = "randomForest",
+  parallel = FALSE,
+  ncores = detectCores() - 1,
+  clusterType = "PSOCK",
+  verbose = TRUE,
+  ntree = NULL,
+  ...
+)
 
 \method{VSURF_interp}{formula}(formula, data, ..., na.action = na.fail)
 }
@@ -25,12 +36,11 @@ function (see ?randomForest for further information).}
 \item{y}{A response vector (must be a factor for classification problems and
 numeric for regression ones).}
 
-\item{ntree}{Number of trees in each forests grown. Standard parameter of
-\code{randomForest}.}
-
 \item{vars}{A vector of variable indices. Typically, indices of variables
 selected by thresholding step (see value \code{varselect.thres} of
 \code{\link{VSURF_thres}} function).}
+
+\item{ntree.interp}{Number of trees of each forest grown.}
 
 \item{nfor.interp}{Number of forests grown.}
 
@@ -66,6 +76,9 @@ coordinate is passed to each intermediate function: \code{VSURF_thres},
 \item{verbose}{A logical indicating if information about method's progress
 (included progress bars for each step) must be printed (default to TRUE).
 Adds a small extra overload.}
+
+\item{ntree}{(deprecated) Number of trees in each forest grown for
+"thresholding step".}
 
 \item{data}{a data frame containing the variables in the model.}
 
@@ -133,13 +146,13 @@ estimations along embedded RF models.
 \examples{
 
 data(iris)
-iris.thres <- VSURF_thres(iris[,1:4], iris[,5], ntree = 100, nfor.thres = 20)
+iris.thres <- VSURF_thres(iris[,1:4], iris[,5])
 iris.interp <- VSURF_interp(iris[,1:4], iris[,5],
-  vars = iris.thres$varselect.thres, nfor.interp = 10)
+  vars = iris.thres$varselect.thres)
 iris.interp
 
 \dontrun{
-# A more interesting example with toys data (see \\code{\\link{toys}})
+# A more interesting example with toys data (see \code{\link{toys}})
 # (a few minutes to execute)
 data(toys)
 toys.thres <- VSURF_thres(toys$x, toys$y)
