@@ -1,10 +1,11 @@
-9a24891bee6f0270152ca786a7646592 *DESCRIPTION
-092809b7f22e29db38271cb505b439ae *NAMESPACE
+fabf55e61f4b848e69225e9b7ad2b2e0 *DESCRIPTION
+963fe80b699f02c6987db410905f4984 *NAMESPACE
 3012824287a10932a4582479df060401 *NEWS
+f05bb37310700429380c23a56be6e82b *NEWS.md
 2986cef3da6e92ad4c20e1352115f999 *R/PM10.R
 2340a5ae7ecfb5a86a1c08349a753b8f *R/VSURF.R
 d3c40878f457acce6eed063e760c49f5 *R/VSURF_interp.R
-224bb3a87f0178c551602bee87aa11ff *R/VSURF_pred.R
+6cd7bbfe577b217e68c21e3c0a590d2f *R/VSURF_pred.R
 0e1f752f40f721d79bbff40eb7c3ded4 *R/VSURF_thres.R
 a33518850a4f1d6ada6b1c8779e458dc *R/plot.VSURF.R
 86ef737b244f67ee0130e5f20463f073 *R/predict.VSURF.R
@@ -33,4 +34,4 @@ afcb5e24845781f35e4a41ddc5acf2ca *man/toys.Rd
 4206cdeb178cdfe344d608bc640cbd8c *tests/testthat.R
 848e59076a55ba0bfbe03e26e4ec373e *tests/testthat/test_iris.R
 b25346653779daec8ee17f5b3ca208d8 *tests/testthat/test_irisParallel.R
-ef4d63fc27face21c9655ff5070315f2 *tests/testthat/test_orange.R
+d3afc750c3a5e42fea3fa1c21ca83946 *tests/testthat/test_orange.R

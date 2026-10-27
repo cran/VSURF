@@ -17,7 +17,7 @@ test_that("Selected variables for the 3 steps", {
 
 test_that("Variable importance",{
   # skip_on_os(os = "mac", arch = "aarch64")
-  if (substr(sessionInfo()$platform, 1, 22) == "aarch64-apple-darwin25") {
+  if (substr(sessionInfo()$platform, 1, 20) == "aarch64-apple-darwin") {
     expect_equal(orange.vsurf$imp.mean.dec,
                  c(2956.4, 201.3, 101.2, 13.9, -13.2,
                    -29.6, -29.9, -36.7, -37.8),
@@ -44,7 +44,7 @@ test_that("Variable importance",{
 
 test_that("OOB erros of nested models", {
   # skip_on_os(os = "mac", arch = "aarch64")
-  if (substr(sessionInfo()$platform, 1, 22) == "aarch64-apple-darwin25") {
+  if (substr(sessionInfo()$platform, 1, 20) == "aarch64-apple-darwin") {
     expect_equal(orange.vsurf$err.interp,
                  c(723, 447, 774),
                  tolerance = 1e-1)
@@ -59,7 +59,7 @@ test_that("OOB erros of nested models", {
 
 test_that("Thresholds for the 3 steps", {
   # skip_on_os(os = "mac", arch = "aarch64")
-  if (substr(sessionInfo()$platform, 1, 22) == "aarch64-apple-darwin25") {
+  if (substr(sessionInfo()$platform, 1, 20) == "aarch64-apple-darwin") {
     expect_equal(min(orange.vsurf$pred.pruned.tree), 56,
                  tolerance = 1e-1)
     expect_equal(orange.vsurf$sd.min, 19, tolerance = 1e-1)
